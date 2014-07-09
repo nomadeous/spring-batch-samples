@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
+
+
+	<description>
+	Lecture du contenu de fichiers zip sans dézipper.
+	</description>
+
+	<!-- Définition des JOBs -->
+	<batch:job id="pocLectureZipParallelJob"
+		job-repository="jobRepository">
+
+		<!-- store date de fin d'exécution -->
+		<batch:step id="getEndDateExecution" next="checkZipFile">
+			<batch:tasklet ref="executionEndDate" />
+		</batch:step>
+		
+		<!-- Verification presence fichiers ZIP dans le repertoire de depot -->
+		<batch:decision id="checkZipFile" decider="checkHaveZipFiles">
+			<batch:next on="OK" to="moveFiles" />
+			<batch:end on="COMPLETED" />
+		</batch:decision>
+		
+		<!-- Deplacer un set de fichier dans le repertoire de traitement -->
+		<batch:step id="moveFiles" next="getZipsATraiter">
+			<batch:tasklet ref="moveZipFiles" />
+		</batch:step>		
+
+		<batch:step id="getZipsATraiter">
+			<batch:tasklet ref="recupererZipATraiter"
+				transaction-manager="transactionManager" />
+			<batch:fail on="FAILED" />
+			<batch:next on="COMPLETED" to="traiterFichiersZipStep" />
+		</batch:step>
+		
+		<!-- =============== Step1 : traiterFichiersZipStep =============== -->
+		<!-- traitement des fragments en parallel -->
+		<batch:step id="traiterFichiersZipStep" parent="step1:master">
+			<batch:next on="*" to="cleanDirectory" />
+		</batch:step>		
+		
+		<!-- netoie le dossier work des anciens fichiers déja traiter -->
+		<batch:step id="cleanDirectory" next="testExecutionDateAfter">
+			<batch:tasklet ref="cleanDirectoryTasklet"
+				transaction-manager="transactionManager" />
+		</batch:step>		
+		
+		<!-- Verification de la fenetre d'execution du batch -->
+		<batch:decision id="testExecutionDateAfter" decider="compareExecutionEndDate">
+			<batch:next on="OK" to="checkZipFile" />
+			<batch:end on="COMPLETED" />
+		</batch:decision>		
+		
+		<!-- Functionnal Context -->
+		<batch:listeners>
+			<batch:listener ref="simpleJobListener" />
+			<batch:listener ref="batchContexteFonctionnelJobListener" />
+		</batch:listeners>
+		
+	</batch:job>
+
+<!-- Execution Context -->
+	<bean id="executionContext"
+		class="org.springframework.batch.item.ExecutionContext">
+	</bean>
+	
+	<!-- ================ TASKLET =============== -->
+
+	<bean id="executionEndDate"
+		class="fr.erdf.nsge.sgel.prm.batch.tasklet.StoreEndDateExecution" />
+
+	<bean id="fichiersATraiter"
+		class="fr.erdf.nsge.sgel.prm.batch.tasklet.RechercherFichiersTasklet"
+		scope="step" />
+
+	<bean id="supprimerXmlFile"
+		class="fr.erdf.nsge.sgel.prm.batch.tasklet.SupprimerFichierTasklet" />
+
+	<bean id="moveZipFiles" class="fr.erdf.nsge.sgel.prm.batch.tasklet.MoveZipFiles" />
+
+	<bean id="recupererZipATraiter"
+		class="fr.erdf.nsge.sgel.prm.batch.tasklet.CheckPresenceZips">
+		<!-- pathResources permet d'initialiser l'étape suivante (le reader) avec 
+			seulement les fichiers issus de cette étape -->
+		<property name="pathResources" value="file:${batch.prm.dossier.traitement}*.zip" />
+	</bean>
+
+	<bean id="cleanDirectoryTasklet"
+		class="fr.erdf.nsge.sgel.prm.batch.tasklet.CleanDirectoryTasklet" />
+	
+	<!-- =============== DECIDER =============== -->
+
+	<bean id="checkHaveZipFiles"
+		class="fr.erdf.nsge.sgel.prm.batch.decider.CheckHaveMoreZipFile" />
+
+	<bean id="compareExecutionEndDate"
+		class="fr.erdf.nsge.sgel.prm.batch.decider.CheckEndExecutionBatch" />
+
+	<!-- =============== PARTITIONER =============== -->
+	<bean id="step1:master"
+		class="org.springframework.batch.core.partition.support.PartitionStep">
+		<property name="jobRepository" ref="jobRepository" />
+		<property name="stepExecutionSplitter">
+			<bean
+				class="org.springframework.batch.core.partition.support.SimpleStepExecutionSplitter">
+				<constructor-arg ref="jobRepository" />
+				<constructor-arg ref="step1" />
+				<constructor-arg ref="multiResourcePartitioner" />
+			</bean>
+		</property>
+		<property name="partitionHandler">
+			<bean
+				class="org.springframework.batch.core.partition.support.TaskExecutorPartitionHandler">
+				<property name="taskExecutor">
+					<bean class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+						<property name="concurrencyLimit" value="3" />
+					</bean>
+				</property>
+				<property name="step" ref="step1" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="multiResourcePartitioner"
+		class="org.springframework.batch.core.partition.support.MultiResourcePartitioner" />
+
+	<batch:step id="step1">
+		<batch:tasklet transaction-manager="transactionManager">
+			<batch:chunk commit-interval="${chunk.commit.interval}"
+				skip-limit="${chunk.skip.limit}" reader="xmlFromZipReader" processor="traiterFluxMesureJobProcessor"
+				writer="xmlFromZipJobWriter">
+					<batch:skippable-exception-classes>
+						<batch:include class="fr.erdf.nsge.sgel.fwk.exception.TechnicalException" />
+					</batch:skippable-exception-classes>
+					
+				<batch:listeners>
+					<batch:listener ref="stepListener" />
+					<batch:listener ref="batchContexteFonctionnelJobListener" />
+				</batch:listeners>						
+			</batch:chunk>
+		</batch:tasklet>
+	</batch:step>
+
+	<!-- =============== Listener =============== -->
+	
+	<bean id="stepListener"
+		class="fr.erdf.nsge.sgel.prm.batch.listener.TraiterPRMStepListener"
+		scope="step" />	
+
+	<!-- =============== Zip Reader =============== -->
+	<bean id="xmlFromZipReader" class="fr.erdf.nsge.sgel.prm.batch.reader.ZipMultiResourceItemReader" scope="step">
+		<property name="archives" value="#{stepExecutionContext[fileName]}" />
+        <property name="delegate" ref="traiterFluxMesureJobReaderXMLFile" />
+        <property name="strict" value="true" />
+    </bean>
+    
+	<!-- =============== Reader =============== -->
+	<!-- XML File reader -->
+	<bean id="traiterFluxMesureJobReaderXMLFile"
+		class="fr.erdf.nsge.sgel.fwk.batch.reader.SgelStaxEventItemReader"
+		autowire-candidate="false" scope="step">
+		<!-- property name="saveState" value="true" / -->
+		<property name="fragmentRootElementName" value="Mesures" />
+		<property name="resource" value="#{stepExecutionContext[fileName]}" />
+		<property name="unmarshaller" ref="mesureMarshaller" />
+	</bean>
+	<bean id="mesureMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" value="com.erdf.bm.types.mesure" />
+	</bean> 
+	
+		<!-- =============== Processor =============== -->
+	<bean id="traiterFluxMesureJobProcessor"
+		class="fr.erdf.nsge.sgel.prm.batch.processor.TraiterFluxMesureJobProcessor"
+		scope="step">
+		<property name="filePath" value="#{stepExecutionContext[fileName]}" />
+	</bean>
+    
+    <bean id="xmlFromZipJobWriter" class="fr.erdf.nsge.sgel.fwk.batch.writer.BlankJobWriter"/>
+    
+
+</beans>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd" [
+  <!ENTITY LogDirectory "/var/projects/sgel/log/sgel-batchs/">
+  <!ENTITY Brique "SGEL-BATCHS-METIER">
+  <!ENTITY BatchName "batch-poc-lecture-zip">
+  <!ENTITY Version "1.0-SNAPSHOT">
+]>
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+	<appender name="appenderErreursSGEL" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="&LogDirectory;/&Brique;_&BatchName;.log" />
+		<param name="ImmediateFlush" value="true" />
+		<param name="DatePattern" value="'.'yyyyMMdd" />
+		<layout class="fr.edf.erdsge.util.traces.SGELayout">
+			<param name="Brique" value="&Brique;" />
+			<param name="Version" value="&Version;" />
+		</layout>
+	</appender>
+	<appender name="appenderSupervisionSGEL" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File"
+			value="&LogDirectory;/infos/&Brique;_&BatchName;.log" />
+		<param name="ImmediateFlush" value="true" />
+		<param name="DatePattern" value="'.'yyyyMMdd-HH" />
+		<layout class="fr.edf.erdsge.util.traces.SGELayout">
+			<param name="Brique" value="&Brique;" />
+			<param name="Version" value="&Version;" />
+		</layout>
+	</appender>
+	<appender name="appenderDebugSGEL" class="org.apache.log4j.RollingFileAppender">
+		<param name="File"
+			value="&LogDirectory;/&Brique;_&BatchName;_DEBUG.log" />
+		<param name="ImmediateFlush" value="true" />
+		<param name="MaxFileSize" value="5000KB" />
+		<param name="MaxBackupIndex" value="10" />
+		<layout class="fr.edf.erdsge.util.traces.SGELayout">
+			<param name="Brique" value="&Brique;" />
+			<param name="Version" value="&Version;" />
+		</layout>
+	</appender>
+	<appender name="appenderConsole" class="org.apache.log4j.ConsoleAppender">
+		<layout class="fr.edf.erdsge.util.traces.SGELayout">
+			<param name="Brique" value="&Brique;" />
+			<param name="Version" value="&Version;" />
+		</layout>
+	</appender>
+
+	<logger name="fr.erdf.nsge.sgel">
+		<level value="DEBUG" />
+	</logger>
+
+	<!-- Definition du Logger racine -->
+	<root>
+		<level value="ERROR" />
+		<appender-ref ref="appenderErreursSGEL" />
+		<appender-ref ref="appenderDebugSGEL"/>
+		<appender-ref ref="appenderSupervisionSGEL" />
+		<appender-ref ref="appenderConsole" />
+	</root>
+</log4j:configuration>

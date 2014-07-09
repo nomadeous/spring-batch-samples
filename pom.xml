@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>prototypes.batches</groupId>
-    <artifactId>zipstreaming</artifactId>
+    <artifactId>spring-batch-samples</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <properties>
@@ -46,7 +46,7 @@
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/main/assembly/sgel-package-v1-batch-poc-lecture-zip.xml</descriptor>
+                                <descriptor>src/main/assembly/batch-assembly.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
@@ -101,6 +101,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>

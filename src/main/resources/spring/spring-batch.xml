@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
+
+    <!-- Spring Batch technical Repository -->
+    <bean id="jobRepository"
+              class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="databaseType" value="HSQL" />
+        <property name="tablePrefix" value="BATCH_" />
+        <property name="isolationLevelForCreate" value="ISOLATION_READ_COMMITTED" />
+    </bean>
+
+    <!-- Job Launcher -->
+    <bean id="jobLauncher"
+              class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+        <property name="jobRepository" ref="jobRepository" />
+        <property name="taskExecutor">
+            <bean class="org.springframework.core.task.SyncTaskExecutor" />
+        </property>
+    </bean>
+
+    <bean id="taskExecutor1" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+        <property name="concurrencyLimit" value="5" /> 
+    </bean>
+
+    <!-- Jobs definition -->
+    <!-- relative path to import -->
+    <import resource="listeners/job.xml" />
+</beans>

@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PocLectureZipJobWriter implements ItemWriter<String> {
+public class StreamingZipJobWriter implements ItemWriter<String> {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PocLectureZipJobWriter.class);
+			.getLogger(StreamingZipJobWriter.class);
 
 	@Value(value = "${ucu.name}")
 	private String ucuName;

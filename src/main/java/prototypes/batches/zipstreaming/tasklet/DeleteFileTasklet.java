@@ -17,10 +17,10 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SupprimerFichierTasklet implements Tasklet, InitializingBean {
+public class DeleteFileTasklet implements Tasklet, InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(SupprimerFichierTasklet.class);
+            .getLogger(DeleteFileTasklet.class);
 
     @Resource(name = "executionContext")
     private ExecutionContext context;

@@ -12,29 +12,29 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TraiterPRMStepListener extends StepListenerSupport {
+public class ProcessingListener extends StepListenerSupport {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(TraiterPRMStepListener.class);
+			.getLogger(ProcessingListener.class);
 
 	private StepExecution stepExecution;
 
 	@BeforeStep
-	public void beforeStepTraiterMesure(StepExecution stepExecution) {
+	public void beforeStepProcess(StepExecution stepExecution) {
 		this.stepExecution = stepExecution;
 		LOGGER.debug("##### launching " + stepExecution.getStepName());
 
 	}
 
 	@AfterStep
-	public void afterStepTraiterMesure(StepExecution stepExecution) {
+	public void afterStepProcess(StepExecution stepExecution) {
 		// recuperation du nom de fichier
 		String fileName = (String) stepExecution.getExecutionContext().get(
 				"fileName");
 		if (!Strings.isNullOrEmpty(fileName))
 			fileName = new File(fileName).getName();
 		LOGGER.debug("##### afterStepTraiterMesure - filename : " + fileName);
-		LOGGER.debug("##### fin de la " + stepExecution.getStepName());
+		LOGGER.debug("##### End of " + stepExecution.getStepName());
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class TraiterPRMStepListener extends StepListenerSupport {
 				"fileName");
 		if (!Strings.isNullOrEmpty(fileName))
 			fileName = new File(fileName).getName();
-		LOGGER.debug("### Le fichier {0} en entrée n'est pas valide!",
+		LOGGER.debug("### Incorrect input file {0} !",
 				fileName);
 		LOGGER.error(fileName, ex);
 	}

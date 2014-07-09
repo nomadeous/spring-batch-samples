@@ -17,15 +17,13 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
-import fr.erdf.nsge.sgel.batch.commons.DirectoryUtils;
-import fr.erdf.nsge.sgel.fwk.log.SGELLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RechercherFichiersTasklet implements Tasklet, InitializingBean {
+public class SearchFilesTasklet implements Tasklet, InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(RechercherFichiersTasklet.class);
+            .getLogger(SearchFilesTasklet.class);
 
     @Value("${xml.path}")
     private String xmlFilePath;

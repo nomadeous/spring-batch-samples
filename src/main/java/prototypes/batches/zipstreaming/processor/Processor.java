@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TraiterFluxMesureJobProcessor implements
+public class Processor implements
 		ItemProcessor<JAXBElement<T>, String> {
 
 	private static final String VIRGULE = ",";
 
 	   private static final Logger LOGGER = LoggerFactory
-            .getLogger(TraiterFluxMesureJobProcessor.class);
+            .getLogger(Processor.class);
 
 	@Value(value = "${ucu.name}")
 	private String ucuName;

@@ -13,10 +13,10 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class CheckPresenceZips implements Tasklet, InitializingBean {
+public class CheckAvailableZipTasklet implements Tasklet, InitializingBean {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(CheckPresenceZips.class);
+            .getLogger(CheckAvailableZipTasklet.class);
 
     @Value("${batch.mesure.dossier.traitement}")
     private String filesPathToProcess;

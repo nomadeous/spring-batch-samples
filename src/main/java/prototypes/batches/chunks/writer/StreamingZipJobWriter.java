@@ -1,4 +1,4 @@
-package prototypes.batches.zipstreaming.writer;
+package prototypes.batches.chunks.writer;
 
 import java.util.List;
 

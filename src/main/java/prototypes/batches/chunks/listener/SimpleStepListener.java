@@ -1,4 +1,4 @@
-package prototypes.batches.zipstreaming.listener;
+package prototypes.batches.chunks.listener;
 
 
 import org.springframework.batch.core.StepExecution;

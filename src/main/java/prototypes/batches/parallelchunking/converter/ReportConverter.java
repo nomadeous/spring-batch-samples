@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package prototypes.batches.chunks.converter;
+package prototypes.batches.parallelchunking.converter;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;

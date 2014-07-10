@@ -1,4 +1,4 @@
-package prototypes.batches.chunks.listener;
+package prototypes.batches.parallelchunking.listener;
 
 
 import org.springframework.batch.core.StepExecution;

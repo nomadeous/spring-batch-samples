@@ -1,4 +1,4 @@
-package prototypes.batches.chunks.processor;
+package prototypes.batches.parallelchunking.processor;
 
 
 import org.springframework.batch.item.ItemProcessor;

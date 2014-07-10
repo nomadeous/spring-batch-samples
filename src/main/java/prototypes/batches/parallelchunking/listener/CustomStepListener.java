@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package prototypes.batches.chunks.listener;
+package prototypes.batches.parallelchunking.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

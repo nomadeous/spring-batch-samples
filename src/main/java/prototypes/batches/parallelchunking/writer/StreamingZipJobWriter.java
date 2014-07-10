@@ -1,4 +1,4 @@
-package prototypes.batches.chunks.writer;
+package prototypes.batches.parallelchunking.writer;
 
 import java.util.List;
 

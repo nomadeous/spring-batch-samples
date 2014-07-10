@@ -1,2 +1,2 @@
-spring-batch-streamingzip
+spring-batch-samples
 =========================

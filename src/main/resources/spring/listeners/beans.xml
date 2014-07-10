@@ -7,7 +7,7 @@
 
     <!-- BEANS -->
     <!-- tasklets -->
-    <bean id="simpleTasklet" class="prototypes.batches.zipstreaming.tasklet.SimpleTasklet">
+    <bean id="simpleTasklet" class="prototypes.batches.listeners.tasklet.SimpleTasklet">
         <property name="simpleAttribute" value="2000" />
     </bean>
     <!-- listeners -->
@@ -22,12 +22,12 @@
     Sample : http://www.mkyong.com/spring-batch/spring-batch-listeners-example/
     -->
     <bean id="simpleStepListener"
-          class="prototypes.batches.zipstreaming.listener.SimpleStepListener" />
+          class="prototypes.batches.listeners.listener.SimpleStepListener" />
     <bean id="customStepListener" 
-          class="prototypes.batches.zipstreaming.listener.CustomStepListener" />
+          class="prototypes.batches.listeners.listener.CustomStepListener" />
     <bean id="customItemReaderListener" 
-          class="prototypes.batches.zipstreaming.listener.CustomItemReaderListener" />
+          class="prototypes.batches.listeners.listener.CustomItemReaderListener" />
     <bean id="customItemWriterListener" 
-          class="prototypes.batches.zipstreaming.listener.CustomItemWriterListener" />
+          class="prototypes.batches.listeners.listener.CustomItemWriterListener" />
     
 </beans>

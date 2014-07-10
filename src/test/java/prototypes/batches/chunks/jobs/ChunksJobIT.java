@@ -1,4 +1,4 @@
-package fr.erdf.nsge.sgel.prm.batch.test;
+package prototypes.batches.chunks.jobs;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -24,18 +24,19 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+//@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
-public class ListenersJobIT {
+public class ChunksJobIT {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(ListenersJobIT.class);
+            .getLogger(ChunksJobIT.class);
 
     @Resource(name = "jobLauncher")
     private JobLauncher jobLauncher;
 
-    @Resource(name = "listenersJob")
-    private Job listenersJob;
+    @Resource(name = "chunksJob")
+    private Job chunksJob;
 
     @Test
     public void testLaunch() {
@@ -47,10 +48,10 @@ public class ListenersJobIT {
         // Launch the job
         try {
             JobParameters jobParameters = new JobParameters(parameters);
-            LOGGER.debug("Launch Batch pocLectureZipParallelJob for test");
+            LOGGER.debug("Launch Batch chunksJob for test");
 
             JobExecution jobExecution = jobLauncher.run(
-                    listenersJob, jobParameters);
+                    chunksJob, jobParameters);
 
             Assert.assertTrue("Job execution status should be " + BatchStatus.COMPLETED,
                     BatchStatus.COMPLETED.equals(jobExecution.getStatus()));

@@ -11,4 +11,5 @@
     <!-- Jobs definition -->
     <!-- relative path to import -->
     <import resource="listeners/job.xml" />
+    <import resource="chunks/job.xml" />
 </beans>

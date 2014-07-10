@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/batch"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
+    <beans:description>Streaming XML files archived in a zip</beans:description>
+    <beans:import resource="beans.xml" />
+
+    <!-- Job Definition -->
+    <job id="parallelChunkingJob" job-repository="jobRepository">
+        <step id="step1">
+            <tasklet>
+                <chunk reader="xmlItemReader"
+                       writer="csvFileItemWriter"
+                       commit-interval="3">
+                </chunk>
+            </tasklet>
+            <listeners>
+                <listener ref="simpleStepListener" />
+                <listener ref="customStepListener" />
+                <listener ref="customItemReaderListener" />
+                <listener ref="customItemWriterListener" />
+            </listeners>
+        </step>
+    </job>
+
+</beans:beans>

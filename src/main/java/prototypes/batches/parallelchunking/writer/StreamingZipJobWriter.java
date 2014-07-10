@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
 
 public class StreamingZipJobWriter implements ItemWriter<String> {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(StreamingZipJobWriter.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(StreamingZipJobWriter.class);
 
-	@Value(value = "${ucu.name}")
-	private String ucuName;
+    @Value(value = "${ucu.name}")
+    private String ucuName;
 
-	@Override
-	public void write(List<? extends String> items) throws Exception {
-		LOGGER.debug("TODO : Do the job for " + this.ucuName);
-	}
+    @Override
+    public void write(List<? extends String> items) throws Exception {
+        LOGGER.debug("TODO : Do the job for " + this.ucuName);
+    }
 }

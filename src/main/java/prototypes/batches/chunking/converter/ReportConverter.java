@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package prototypes.batches.parallelchunking.converter;
+package prototypes.batches.chunking.converter;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -42,7 +42,7 @@ public class ReportConverter implements Converter {
     public Object unmarshal(
             HierarchicalStreamReader reader, UnmarshallingContext context) {
         LOGGER.info("Unmarshalling to report object");
-        
+
         Report obj = new Report();
 
         //get attribute

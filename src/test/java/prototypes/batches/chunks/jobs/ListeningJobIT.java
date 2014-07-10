@@ -10,15 +10,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 //@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/parallelchunking/applicationContext.xml"})
-public class ParallelChunkingJobIT extends BatchJobIT {
+@ContextConfiguration(locations = {"classpath:spring/listening/applicationContext.xml"})
+public class ListeningJobIT extends BatchJobIT {
 
-    @Resource(name = "parallelChunkingJob")
-    private Job parallelChunkingJob;
+    @Resource(name = "listeningJob")
+    private Job listeningJob;
 
     @Override
     protected Job getJob() {
-        return parallelChunkingJob;
+        return listeningJob;
     }
 
     @Test

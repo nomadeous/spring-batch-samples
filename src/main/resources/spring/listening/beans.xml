@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd">
+    <description>Simple chunk example</description>
+    
+    
+    <!-- BEANS -->
+    <!-- tasklets -->
+    <bean id="simpleTasklet" class="prototypes.batches.listening.tasklet.SimpleTasklet">
+        <property name="simpleAttribute" value="2000" />
+    </bean>
+    <!-- listeners -->
+    <!--
+    In Spring batch, there are six "listeners" to intercept the step execution :
+    StepExecutionListener
+    ItemReadListener
+    ItemProcessListener
+    ItemWriteListener
+    ChunkListener
+    SkipListener
+    Sample : http://www.mkyong.com/spring-batch/spring-batch-listeners-example/
+    -->
+    <bean id="simpleStepListener"
+          class="prototypes.batches.listening.listener.SimpleStepListener" />
+    <bean id="customStepListener" 
+          class="prototypes.batches.listening.listener.CustomStepListener" />
+    <bean id="customItemReaderListener" 
+          class="prototypes.batches.listening.listener.CustomItemReaderListener" />
+    <bean id="customItemWriterListener" 
+          class="prototypes.batches.listening.listener.CustomItemWriterListener" />
+    
+</beans>

@@ -12,6 +12,13 @@
     <import resource="../chunking/beans.xml" />
     
     <!-- BEANS -->
+    <bean id="simpleAsyncTaskExecutor1" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+        <property name="concurrencyLimit" value="1"/>
+    </bean>
+    <bean id="simpleAsyncTaskExecutor2" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+        <property name="concurrencyLimit" value="2"/>
+    </bean>
+    
     <!-- tasklets -->
     
     <!-- Readers -->

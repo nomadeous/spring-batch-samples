@@ -16,14 +16,8 @@ public class ChunkingJobIT extends BatchJobIT {
     @Resource(name = "chunkingJob")
     private Job chunkingJob;
 
-    @Override
-    protected Job getJob() {
-        return chunkingJob;
-    }
-
     @Test
-    @Override
-    public void testLaunch() {
-        super.testLaunch();
+    public void launchTest() {
+        super.launchCompletingJob(chunkingJob);
     }
 }

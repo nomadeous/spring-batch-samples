@@ -34,11 +34,16 @@ public abstract class BatchJobIT {
 
     @Resource(name = "jobLauncher")
     private JobLauncher jobLauncher;
-    
-    abstract Job getJob();
 
+    public void launchCompletingJob(Job job) {
+        this.launchTest(job, BatchStatus.COMPLETED);
+    }
+
+    public void launchFailingJob(Job job) {
+        this.launchTest(job, BatchStatus.FAILED);
+    }
     
-    public void testLaunch() {
+    private void launchTest(Job job, BatchStatus expectedStatus) {
         // Prepare parameters for the job
         Map<String, JobParameter> parameters = new HashMap<String, JobParameter>();
         parameters.put("currentDate", new JobParameter(Calendar.getInstance()
@@ -50,10 +55,11 @@ public abstract class BatchJobIT {
             LOGGER.info("Launch Batch chunksJob for test");
 
             JobExecution jobExecution = jobLauncher.run(
-                    getJob(), jobParameters);
+                    job, jobParameters);
 
-            Assert.assertTrue("Job execution status should be " + BatchStatus.COMPLETED,
-                    BatchStatus.COMPLETED.equals(jobExecution.getStatus()));
+            Assert.assertTrue("Job execution status " + jobExecution.getStatus()
+                    + "  should be " + expectedStatus,
+                    expectedStatus.equals(jobExecution.getStatus()));
 
         } catch (JobExecutionAlreadyRunningException e) {
             LOGGER.error("Job Already Running", e);

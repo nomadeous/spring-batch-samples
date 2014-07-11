@@ -16,14 +16,8 @@ public class ListeningJobIT extends BatchJobIT {
     @Resource(name = "listeningJob")
     private Job listeningJob;
 
-    @Override
-    protected Job getJob() {
-        return listeningJob;
-    }
-
     @Test
-    @Override
-    public void testLaunch() {
-        super.testLaunch();
+    public void launchTest() {
+        super.launchCompletingJob(listeningJob);
     }
 }

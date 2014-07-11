@@ -11,19 +11,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/parallelchunking/applicationContext.xml"})
-public class ParallelChunkingJobIT extends BatchJobIT {
+public class XmlReadParallelChunkingJobIT extends BatchJobIT {
 
-    @Resource(name = "parallelChunkingJob")
-    private Job parallelChunkingJob;
-
-    @Override
-    protected Job getJob() {
-        return parallelChunkingJob;
-    }
+    @Resource(name = "xmlReadParallelChunkingJob1")
+    private Job xmlReadParallelChunkingJob1;
+    @Resource(name = "xmlReadParallelChunkingJob2")
+    private Job xmlReadParallelChunkingJob2;
 
     @Test
-    @Override
-    public void testLaunch() {
-        super.testLaunch();
+    public void launchTest1() {
+        super.launchCompletingJob(xmlReadParallelChunkingJob1);
+    }
+    @Test
+    public void launchTest2() {
+        super.launchFailingJob(xmlReadParallelChunkingJob2);
     }
 }

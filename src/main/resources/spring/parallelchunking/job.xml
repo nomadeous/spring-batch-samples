@@ -7,9 +7,27 @@
     <beans:import resource="beans.xml" />
 
     <!-- Job Definition -->
-    <job id="parallelChunkingJob" job-repository="jobRepository">
+    <job id="xmlReadParallelChunkingJob1" job-repository="jobRepository" >
         <step id="step1">
-            <tasklet>
+            <tasklet task-executor="simpleAsyncTaskExecutor1">
+                <chunk reader="xmlItemReader"
+                       writer="csvFileItemWriter"
+                       commit-interval="3">
+                </chunk>
+            </tasklet>
+            <listeners>
+                <listener ref="simpleStepListener" />
+                <listener ref="customStepListener" />
+                <listener ref="customItemReaderListener" />
+                <listener ref="customItemWriterListener" />
+            </listeners>
+        </step>
+    </job>
+    <!-- using a simple executor multithreaded (just 2 threads)
+         don't work when reading an XML file with a simple reader -->
+    <job id="xmlReadParallelChunkingJob2" job-repository="jobRepository" >
+        <step id="step2">
+            <tasklet task-executor="simpleAsyncTaskExecutor2">
                 <chunk reader="xmlItemReader"
                        writer="csvFileItemWriter"
                        commit-interval="3">
